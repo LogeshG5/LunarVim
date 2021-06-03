@@ -22,7 +22,7 @@ vim.g.dashboard_custom_header = O.dashboard.custom_header
 vim.g.dashboard_default_executive = 'telescope'
 
 vim.g.dashboard_custom_section = {
-    a = {description = {'  Find File          '}, command = 'Telescope find_files'},
+    a = {description = {'  Find File          '}, command = ':lua require("telescope.builtin").find_files({previewer = false})'},
     b = {description = {'  Recently Used Files'}, command = 'Telescope oldfiles'},
     c = {description = {'  Load Last Session  '}, command = 'SessionLoad'},
     d = {description = {'  Find Word          '}, command = 'Telescope live_grep'},

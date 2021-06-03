@@ -47,6 +47,8 @@ return require("packer").startup(function(use)
 
     -- Debugging
     use {"mfussenegger/nvim-dap", opt = true}
+    use {"rcarriga/nvim-dap-ui", opt = true}
+    use {"theHamsta/nvim-dap-virtual-text", opt = true}
 
     -- Autocomplete
     use {"hrsh7th/nvim-compe", opt = true}
@@ -92,6 +94,9 @@ return require("packer").startup(function(use)
 		-- Sane gx for netrw_gx bug
     use {"felipec/vim-sanegx"}
 
+    -- Added extras
+    use {"jremmen/vim-ripgrep", opt = true}
+
     require_plugin("nvim-lspconfig")
     require_plugin("lspsaga.nvim")
     require_plugin("nvim-lspinstall")
@@ -102,6 +107,8 @@ return require("packer").startup(function(use)
     require_plugin("telescope.nvim")
     require_plugin('telescope-project.nvim')
     require_plugin("nvim-dap")
+    require_plugin("nvim-dap-ui")
+    require_plugin("nvim-dap-virtual-text")
     require_plugin("nvim-compe")
     require_plugin("vim-vsnip")
     require_plugin("nvim-treesitter")
@@ -122,6 +129,7 @@ return require("packer").startup(function(use)
     require_plugin('lsp-rooter.nvim')
     require_plugin("TrueZen.nvim")
     require_plugin("nvim-ts-context-commentstring")
+    require_plugin("vim-ripgrep")
 
     -- Extras
     if O.extras then

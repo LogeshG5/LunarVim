@@ -51,10 +51,12 @@ vim.g.mapleader = ' '
 vim.api.nvim_set_keymap('n', '<Leader>h', ':set hlsearch!<CR>', {noremap = true, silent = true})
 
 -- explorer
-vim.api.nvim_set_keymap('n', '<Leader>e', ':NvimTreeToggle<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Leader>t', ':NvimTreeToggle<CR>', {noremap = true, silent = true})
 
 -- telescope
-vim.api.nvim_set_keymap('n', '<Leader>f', ':Telescope find_files<CR>', {noremap = true, silent = true})
+-- vim.api.nvim_set_keymap('n', '<Leader>e', ':Telescope find_files<CR>', {noremap = true, silent = true})
+-- Disable preview for find files
+vim.api.nvim_set_keymap('n', '<Leader>e', ':lua require("telescope.builtin").find_files({previewer = false})<CR>', {noremap = true, silent = true})
 
 -- dashboard
 vim.api.nvim_set_keymap('n', '<Leader>;', ':Dashboard<CR>', {noremap = true, silent = true})
@@ -75,10 +77,10 @@ local mappings = {
     ["/"] = "Comment",
     ["c"] = "Close Buffer",
     ["e"] = "Explorer",
-    ["f"] = "Find File",
+    ["f"] = "Find Word",
     ["h"] = "No Highlight",
     ["p"] = "Projects",
-    d = {
+    D = {
         name = "+Diagnostics",
         t = {"<cmd>TroubleToggle<cr>", "trouble"},
         w = {"<cmd>TroubleToggle lsp_workspace_diagnostics<cr>", "workspace"},
@@ -87,14 +89,17 @@ local mappings = {
         l = {"<cmd>TroubleToggle loclist<cr>", "loclist"},
         r = {"<cmd>TroubleToggle lsp_references<cr>", "references"},
     },
-    D = {
+    d = {
         name = "+Debug",
         b = {"<cmd>DebugToggleBreakpoint<cr>", "Toggle Breakpoint"},
+        B = {"<cmd>lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<cr>", "Toggle Conditional Breakpoint"},
         c = {"<cmd>DebugContinue<cr>", "Continue"},
         i = {"<cmd>DebugStepInto<cr>", "Step Into"},
         o = {"<cmd>DebugStepOver<cr>", "Step Over"},
-        r = {"<cmd>DebugToggleRepl<cr>", "Toggle Repl"},
-        s = {"<cmd>DebugStart<cr>", "Start"}
+        e = {"<cmd>DebugStepOut<cr>", "Step Out"},
+        r = {"<cmd>Telescope dap commands theme=get_dropdown<cr>", "Show commands"},
+        s = {"<cmd>DebugStart<cr>", "Start"},
+        S = {"<cmd>lua require('dap').disconnect()<cr>", "Stop"}
     },
     g = {
         name = "+Git",
@@ -118,7 +123,7 @@ local mappings = {
         D = {"<cmd>Telescope lsp_workspace_diagnostics<cr>", "Workspace Diagnostics"},
         f = {"<cmd>LspFormatting<cr>", "Format"},
         i = {"<cmd>LspInfo<cr>", "Info"},
-        l = {"<cmd>Lspsaga lsp_finder<cr>", "LSP Finder"},
+        l = {"<cmd>Telescope lsp_references<cr>", "LSP Finder"},
         L = {"<cmd>Lspsaga show_line_diagnostics<cr>", "Line Diagnostics"},
         p = {"<cmd>Lspsaga preview_definition<cr>", "Preview Definition"},
         q = {"<cmd>Telescope quickfix<cr>", "Quickfix"},

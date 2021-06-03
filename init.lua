@@ -7,6 +7,7 @@ require('plugins')
 require('lv-utils')
 require('lv-autocommands')
 require('keymappings')
+require('keymappings-extras')
 require('lv-nvimtree') -- This plugin must be required somewhere before colorscheme.  Placing it after will break navigation keymappings
 require('colorscheme') -- This plugin must be required somewhere after nvimtree. Placing it before will break navigation keymappings
 require('lv-galaxyline')
@@ -23,6 +24,7 @@ require('lv-rnvimr')
 require('lv-which-key')
 require('lv-lsp-rooter')
 require('lv-zen')
+require('lv-nvim-dap')
 
 -- extras
 if O.extras then
