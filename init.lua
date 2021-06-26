@@ -1,13 +1,13 @@
 require('lv-globals')
 vim.cmd('luafile '..CONFIG_PATH..'/lv-settings.lua')
 require('settings')
+require('lg-settings.pre')
 require('lv-gitblame')
 require('lv-matchup')
 require('plugins')
 require('lv-utils')
 require('lv-autocommands')
 require('keymappings')
-require('keymappings-extras')
 require('lv-nvimtree') -- This plugin must be required somewhere before colorscheme.  Placing it after will break navigation keymappings
 require('colorscheme') -- This plugin must be required somewhere after nvimtree. Placing it before will break navigation keymappings
 require('lv-galaxyline')
@@ -24,7 +24,6 @@ require('lv-rnvimr')
 require('lv-which-key')
 require('lv-lsp-rooter')
 require('lv-zen')
-require('lv-nvim-dap')
 
 -- extras
 if O.extras then
@@ -35,7 +34,7 @@ if O.extras then
     require('lv-symbols-outline')
 end
 
-
+require('lg-settings.post')
 
 -- TODO is there a way to do this without vimscript
 vim.cmd('source '..CONFIG_PATH..'/vimscript/functions.vim')
@@ -45,6 +44,7 @@ require('lsp')
 require('lsp.angular-ls')
 require('lsp.bash-ls')
 require('lsp.clangd')
+-- require('lsp.ccls')
 require('lsp.cmake-ls')
 require('lsp.css-ls')
 require('lsp.dart-ls')

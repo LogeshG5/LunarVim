@@ -12,7 +12,7 @@ O.auto_complete = true
 O.colorscheme = 'lunar'
 O.auto_close_tree = 0
 O.wrap_lines = false
-O.timeoutlen = 200
+O.timeoutlen = 300
 O.document_highlight = true
 O.extras = true
 
@@ -26,9 +26,9 @@ O.treesitter.ignore_install = {"haskell"}
 O.treesitter.highlight.enabled = true
 
 
-O.clang.diagnostics.virtual_text = false
-O.clang.diagnostics.signs = false
-O.clang.diagnostics.underline = false
+O.clang.diagnostics.virtual_text = true
+O.clang.diagnostics.signs = true
+O.clang.diagnostics.underline = true
 
 -- python
 -- add things like O.python.formatter.yapf.exec_path

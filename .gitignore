@@ -4,7 +4,9 @@ tags*
 .netrwhist
 pythonpath.vim
 nodepath.vim
+autoload
 autoload/plugged/*
+plugged/*
 vimspector-config/gadgets/*
 paths.vim
 session

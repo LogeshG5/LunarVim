@@ -49,6 +49,7 @@ return require("packer").startup(function(use)
     use {"mfussenegger/nvim-dap", opt = true}
     use {"rcarriga/nvim-dap-ui", opt = true}
     use {"theHamsta/nvim-dap-virtual-text", opt = true}
+    use {"Pocco81/DAPInstall.nvim", opt = true}
 
     -- Autocomplete
     use {"hrsh7th/nvim-compe", opt = true}
@@ -109,6 +110,7 @@ return require("packer").startup(function(use)
     require_plugin("nvim-dap")
     require_plugin("nvim-dap-ui")
     require_plugin("nvim-dap-virtual-text")
+    require_plugin("DAPInstall.nvim")
     require_plugin("nvim-compe")
     require_plugin("vim-vsnip")
     require_plugin("nvim-treesitter")

@@ -31,7 +31,13 @@ require("which-key").setup {
         spacing = 3 -- spacing between columns
     },
     hidden = {"<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ "}, -- hide mapping boilerplate
-    show_help = true -- show help message on the command line when the popup is visible
+    show_help = true, -- show help message on the command line when the popup is visible
+    triggers_blacklist = {
+        -- list of mode / prefixes that should never be hooked by WhichKey
+        -- this is mostly relevant for key maps that start with a native binding
+        -- most people should not need to change this
+        n = { "o", "O" },
+    },
 }
 
 local opts = {
@@ -54,8 +60,6 @@ vim.api.nvim_set_keymap('n', '<Leader>h', ':set hlsearch!<CR>', {noremap = true,
 vim.api.nvim_set_keymap('n', '<Leader>t', ':NvimTreeToggle<CR>', {noremap = true, silent = true})
 
 -- telescope
--- vim.api.nvim_set_keymap('n', '<Leader>e', ':Telescope find_files<CR>', {noremap = true, silent = true})
--- Disable preview for find files
 vim.api.nvim_set_keymap('n', '<Leader>e', ':lua require("telescope.builtin").find_files({previewer = false})<CR>', {noremap = true, silent = true})
 
 -- dashboard
@@ -66,20 +70,35 @@ vim.api.nvim_set_keymap("n", "<leader>/", ":CommentToggle<CR>", {noremap = true,
 vim.api.nvim_set_keymap("v", "<leader>/", ":CommentToggle<CR>", {noremap = true, silent = true})
 
 -- close buffer
-vim.api.nvim_set_keymap("n", "<leader>c", ":BufferClose<CR>", {noremap = true, silent = true})
+vim.api.nvim_set_keymap("n", "<leader>c", ":BufferClose!<CR>", {noremap = true, silent = true})
 
 -- open projects
-vim.api.nvim_set_keymap('n', '<leader>p', ":lua require'telescope'.extensions.project.project{}<CR>",
-                        {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>p', ":Telescope project<CR>", {noremap = true, silent = true})
+
+-- Telescope jumps
+vim.api.nvim_set_keymap('n', '<leader>j', ':Telescope jumplist<cr>', {noremap = true, silent = true})
+
 -- TODO create entire treesitter section
+
+vim.api.nvim_set_keymap('n', '<leader>f', ':Rg <cr>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('v', '<leader>f', 'y:Rg <c-r>"<cr>', {noremap = true, silent = true})
 
 local mappings = {
     ["/"] = "Comment",
     ["c"] = "Close Buffer",
-    ["e"] = "Explorer",
-    ["f"] = "Find Word",
+    ["t"] = "Explorer",
+    ["e"] = "Find files",
     ["h"] = "No Highlight",
     ["p"] = "Projects",
+    ["q"] = "Quit all",
+    ["."] = "Set cwd",
+    f = {
+        name = "Find Word",
+        a = {"<cmd>Rg<cr>", "all documents in cwd"},
+        f = {"<cmd>Telescope current_buffer_fuzzy_find<cr>", "fuzzy find current document"},
+        h = {"<cmd>Rg <cword> %<cr>", "here in this docuement"},
+        r = {":%s/<c-r><c-w>//gcI<Left><Left><Left><Left>", "Find and replace"},
+    },
     D = {
         name = "+Diagnostics",
         t = {"<cmd>TroubleToggle<cr>", "trouble"},
@@ -96,10 +115,12 @@ local mappings = {
         c = {"<cmd>DebugContinue<cr>", "Continue"},
         i = {"<cmd>DebugStepInto<cr>", "Step Into"},
         o = {"<cmd>DebugStepOver<cr>", "Step Over"},
-        e = {"<cmd>DebugStepOut<cr>", "Step Out"},
-        r = {"<cmd>Telescope dap commands theme=get_dropdown<cr>", "Show commands"},
+        O = {"<cmd>DebugStepOut<cr>", "Step Out"},
+        r = {"<cmd>Telescope dap commands theme=get_dropdown<cr>", "Show debug commands"},
+        h = {"<cmd>lua require('dap').run_to_cursor()<cr>", "Run to cursor (till Here)"},
         s = {"<cmd>DebugStart<cr>", "Start"},
-        S = {"<cmd>lua require('dap').disconnect()<cr>", "Stop"}
+        S = {"<cmd>lua require('dap').disconnect()<cr>", "Stop"},
+        w = {"<cmd>DebugToggleRepl<cr>", "Toggle Repl Window"},
     },
     g = {
         name = "+Git",
@@ -147,7 +168,13 @@ local mappings = {
         t = {"<cmd>Telescope live_grep<cr>", "Text"}
     },
     S = {name = "+Session", s = {"<cmd>SessionSave<cr>", "Save Session"}, l = {"<cmd>SessionLoad<cr>", "Load Session"}},
-
+    w = {
+        name = "+Save",
+        w = {"<cmd>:w!<cr>", "Save"},
+        n = {"<cmd>:q!<cr>", "Save None"},
+        q = {"<cmd>:wq!<cr>", "Save and quit"},
+        s = {"<cmd>:w !sudo -A tee > /dev/null % <cr>", "Sudo Save"},
+    },
     -- extras
     z = {
         name = "+Zen",
@@ -159,3 +186,40 @@ local mappings = {
 
 local wk = require("which-key")
 wk.register(mappings, opts)
+
+-- Mappings for visual mode
+local vopts = {
+    mode = "v", -- NORMAL mode
+    prefix = "<leader>",
+    buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
+    silent = true, -- use `silent` when creating keymaps
+    noremap = true, -- use `noremap` when creating keymaps
+    nowait = false -- use `nowait` when creating keymaps
+}
+
+wk.register({
+    f = {
+        name = "Find Word",
+        a = {'y:Rg <c-r>"<cr>', "all documents in cwd"},
+        h = {'y:Rg <c-r>" %<cr>', "here in current document"},
+        r = {'y:%s/<c-r>"//gcI<Left><Left><Left><Left>', "Find and replace"},
+    },
+}, vopts)
+
+-- General mappings
+-- insert empty lines
+vim.api.nvim_set_keymap('n', 'oo', ':<C-u>call append(line("."),   repeat([""], v:count1))<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', 'OO', ':<C-u>call append(line(".")-1, repeat([""], v:count1))<CR>', {noremap = true, silent = true})
+
+-- easy save and quit
+vim.cmd([[cnoreabbrev w!! w !sudo -A tee > /dev/null %]])
+vim.api.nvim_set_keymap('n', '<leader>q', ':q <cr>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>w', ':w! <cr>', {noremap = true, silent = true})
+
+-- Set working directory
+vim.api.nvim_set_keymap('n', '<leader>.', ':cd %:p:h<cr>', {noremap = true, silent = true})
+
+
+
+vim.cmd([[nnoremap <expr> k (v:count > 1 ? "m'" . v:count : '') . 'gk']])
+vim.cmd([[nnoremap <expr> j (v:count > 1 ? "m'" . v:count : '') . 'gj']])
